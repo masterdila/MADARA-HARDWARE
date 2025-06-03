@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> MADARA HARDWARE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Custom styles for the Inter font and general body */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+            color: #374151; /* Dark gray text */
+        }
+        /* Ensure the background element for the game has relative positioning if you're integrating */
+        #background {
+            position: relative;
+            /* Add other background styles here if needed for your game integration */
+        }
+        /* Basic styling for the flame class if you're using it */
+        .flame {
+            /* You can add more specific styles here for your flame.gif */
+            z-index: 10; /* Ensure it's above other elements if needed */
+        }
+
+        /* Modal styling */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="bg-gray-800 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-blue-400">MADARA HARDWARE</h1>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="#products" class="hover:text-blue-400 transition duration-300">Products</a></li>
+                    <li><a href="#contact" class="hover:text-blue-400 transition duration-300">Contact Us</a></li>
+                    <li><a href="#customer-lookup" class="hover:text-blue-400 transition duration-300">Customer Lookup</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-6 flex-grow">
+        <section id="products" class="bg-white p-8 rounded-lg shadow-lg mb-8">
+            <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-8">Our Hardware Selection</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div class="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
+                    <img src="https://placehold.co/300x200/4F46E5/FFFFFF?text=Gaming+GPU" alt="Gaming GPU" class="w-full h-48 object-cover rounded-md mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">High-End Gaming GPU</h3>
+                    <p class="text-gray-700 text-sm mb-3">Unleash ultimate gaming performance with this powerful graphics card.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600">$799.99</span>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full transition duration-300">Add to Cart</button>
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
+                    <img src="https://placehold.co/300x200/10B981/FFFFFF?text=Fast+SSD" alt="Fast SSD" class="w-full h-48 object-cover rounded-md mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Ultra-Fast NVMe SSD 1TB</h3>
+                    <p class="text-gray-700 text-sm mb-3">Experience lightning-fast boot times and application loading.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600">$129.99</span>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full transition duration-300">Add to Cart</button>
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
+                    <img src="https://placehold.co/300x200/EF4444/FFFFFF?text=Gaming+Monitor" alt="Gaming Monitor" class="w-full h-48 object-cover rounded-md mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">27" 144Hz Gaming Monitor</h3>
+                    <p class="text-gray-700 text-sm mb-3">Immersive visuals with a high refresh rate for competitive gaming.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600">$299.99</span>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full transition duration-300">Add to Cart</button>
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
+                    <img src="https://placehold.co/300x200/F59E0B/FFFFFF?text=CPU" alt="High-Performance CPU" class="w-full h-48 object-cover rounded-md mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">High-Performance CPU</h3>
+                    <p class="text-gray-700 text-sm mb-3">The brain of your system, ready for intense workloads.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600">$349.99</span>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full transition duration-300">Add to Cart</button>
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
+                    <img src="https://placehold.co/300x200/6366F1/FFFFFF?text=RAM" alt="DDR4 RAM" class="w-full h-48 object-cover rounded-md mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">DDR4 RAM 32GB Kit</h3>
+                    <p class="text-gray-700 text-sm mb-3">Boost your system's multitasking capabilities and speed.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600">$119.99</span>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full transition duration-300">Add to Cart</button>
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
+                    <img src="https://placehold.co/300x200/EC4899/FFFFFF?text=Motherboard" alt="Gaming Motherboard" class="w-full h-48 object-cover rounded-md mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Gaming Motherboard</h3>
+                    <p class="text-gray-700 text-sm mb-3">The foundation for your high-performance PC build.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600">$189.99</span>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full transition duration-300">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="bg-white p-8 rounded-lg shadow-lg mb-8">
+            <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-8">Get in Touch / Place an Order</h2>
+            <form id="customerForm" class="max-w-xl mx-auto space-y-6">
+                <div>
+                    <label for="customerName" class="block text-lg font-medium text-gray-700 mb-2">Your Name</label>
+                    <input type="text" id="customerName" name="customerName" placeholder="John Doe"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300" required>
+                </div>
+                <div>
+                    <label for="customerEmail" class="block text-lg font-medium text-gray-700 mb-2">Email Address</label>
+                    <input type="email" id="customerEmail" name="customerEmail" placeholder="john.doe@example.com"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300" required>
+                </div>
+                <div>
+                    <label for="customerPhone" class="block text-lg font-medium text-gray-700 mb-2">Phone Number (Optional)</label>
+                    <input type="tel" id="customerPhone" name="customerPhone" placeholder="+94 77 123 4567"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                </div>
+                <div>
+                    <label for="customerNic" class="block text-lg font-medium text-gray-700 mb-2">NIC Number</label>
+                    <input type="text" id="customerNic" name="customerNic" placeholder="901234567V or 200012345678"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300" required>
+                </div>
+                <div>
+                    <label for="customerAddress" class="block text-lg font-medium text-gray-700 mb-2">Shipping Address</label>
+                    <textarea id="customerAddress" name="customerAddress" rows="4" placeholder="123 Main Street, Colombo 01, Sri Lanka"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300" required></textarea>
+                </div>
+                <div>
+                    <label for="inquiryDetails" class="block text-lg font-medium text-gray-700 mb-2">Your Inquiry / Order Details</label>
+                    <textarea id="inquiryDetails" name="inquiryDetails" rows="6" placeholder="I'm interested in the High-End Gaming GPU and would like to know about shipping options..."
+                              class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md transition duration-300 transform hover:scale-105">
+                    Submit Inquiry / Order
+                </button>
+            </form>
+        </section>
+
+        <section id="customer-lookup" class="bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-8">Lookup Customer Details by NIC</h2>
+            <div class="max-w-xl mx-auto space-y-4">
+                <div>
+                    <label for="nicLookup" class="block text-lg font-medium text-gray-700 mb-2">Enter NIC Number</label>
+                    <input type="text" id="nicLookup" name="nicLookup" placeholder="901234567V or 200012345678"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                </div>
+                <button id="lookupButton" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-md transition duration-300 transform hover:scale-105">
+                    Lookup Customer
+                </button>
+
+                <div id="customerDetailsDisplay" class="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200 hidden">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Customer Details:</h3>
+                    <p><strong class="font-medium">Name:</strong> <span id="displayCustomerName"></span></p>
+                    <p><strong class="font-medium">Email:</strong> <span id="displayCustomerEmail"></span></p>
+                    <p><strong class="font-medium">Phone:</strong> <span id="displayCustomerPhone"></span></p>
+                    <p><strong class="font-medium">NIC:</strong> <span id="displayCustomerNic"></span></p>
+                    <p><strong class="font-medium">Address:</strong> <span id="displayCustomerAddress"></span></p>
+                    <p><strong class="font-medium">Inquiry/Order:</strong> <span id="displayInquiryDetails"></span></p>
+                </div>
+                <div id="noCustomerFound" class="mt-4 p-4 bg-red-100 text-red-700 rounded-md hidden">
+                    No customer found with that NIC.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center mt-8 shadow-inner">
+        <div class="container mx-auto">
+            <p>&copy; 2025 MADARA Hardware. All rights reserved.</p>
+            <p class="text-sm mt-1">Powered by DILA</p>
+            <p> HOT LINE - 074 185 6892</p>
+        </div>
+    </footer>
+
+    <div id="customModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modalTitle" class="text-2xl font-bold mb-4 text-gray-800"></h3>
+            <p id="modalMessage" class="text-gray-700 mb-6"></p>
+            <button id="modalCloseButton" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md transition duration-300">OK</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
+        // Import Auth and Firestore for your existing functionality
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js"; // Updated to 11.8.1
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js"; // Updated to 11.8.1
+
+        // Your web app's Firebase configuration (hardcoded as per your request)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzdAuyWRFGlH1pit8I402wT4pLs9kBMl8",
+            authDomain: "madara-motors.firebaseapp.com",
+            projectId: "madara-motors",
+            storageBucket: "madara-motors.firebasestorage.app",
+            messagingSenderId: "368905251300",
+            appId: "1:368905251300:web:4ec856c4f940bad23f3ff1",
+            measurementId: "G-KHET399YFF" // Analytics measurement ID
+        };
+
+        // Initialize Firebase services
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app); // Initialize Analytics
+
+        let db;
+        let auth;
+        let currentUserId = null;
+        let isAuthReady = false;
+
+        // Function to show custom modal
+        function showCustomModal(title, message) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('customModal').classList.add('show');
+        }
+
+        // Function to hide custom modal
+        function hideCustomModal() {
+            document.getElementById('customModal').classList.remove('show');
+        }
+
+        // Initialize Firebase Auth and Firestore
+        async function initializeFirebaseServices() {
+            try {
+                db = getFirestore(app); // Get Firestore instance
+                auth = getAuth(app);   // Get Auth instance
+
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        currentUserId = user.uid;
+                        console.log("Authenticated with user ID:", currentUserId);
+                        isAuthReady = true;
+                    } else {
+                        // Sign in anonymously if no user is currently authenticated
+                        try {
+                            await signInAnonymously(auth);
+                        } catch (error) {
+                            console.error("Firebase authentication error:", error);
+                            showCustomModal("Authentication Error", "Failed to authenticate with Firebase. Please try again.");
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Firebase service initialization error:", error);
+                showCustomModal("Initialization Error", `Failed to initialize Firebase services: ${error.message}.`);
+            }
+        }
+
+        // Call initialization of services on page load
+        initializeFirebaseServices();
+
+        // Event listener for modal close button
+        document.getElementById('modalCloseButton').addEventListener('click', hideCustomModal);
+
+
+        // Function to save customer details to Firestore
+        async function saveCustomerDetails(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            if (!isAuthReady || !currentUserId) {
+                showCustomModal("Error", "Authentication not ready. Please wait a moment and try again.");
+                return;
+            }
+
+            const customerName = document.getElementById('customerName').value;
+            const customerEmail = document.getElementById('customerEmail').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+            const customerNic = document.getElementById('customerNic').value.trim(); // Trim whitespace
+            const customerAddress = document.getElementById('customerAddress').value;
+            const inquiryDetails = document.getElementById('inquiryDetails').value;
+
+            if (!customerNic) {
+                showCustomModal("Error", "NIC Number is required to save customer details.");
+                return;
+            }
+
+            // Use projectId from hardcoded config as appId for Firestore path
+            const projectId = firebaseConfig.projectId;
+            // Data is stored in: /artifacts/{projectId}/users/{userId}/customers/{nic}
+            const customerDocRef = doc(db, `artifacts/${projectId}/users/${currentUserId}/customers`, customerNic);
+
+            try {
+                await setDoc(customerDocRef, {
+                    name: customerName,
+                    email: customerEmail,
+                    phone: customerPhone,
+                    nic: customerNic,
+                    address: customerAddress,
+                    inquiry: inquiryDetails,
+                    timestamp: new Date().toISOString() // Add a timestamp
+                });
+                showCustomModal("Success!", "Customer details saved successfully!");
+                document.getElementById('customerForm').reset(); // Clear the form
+            } catch (e) {
+                console.error("Error saving document: ", e);
+                showCustomModal("Error", "Failed to save customer details. Please try again.");
+            }
+        }
+
+        // Function to display customer details
+        function displayCustomerDetails(data) {
+            const displayArea = document.getElementById('customerDetailsDisplay');
+            const noCustomerFound = document.getElementById('noCustomerFound');
+
+            if (data) {
+                document.getElementById('displayCustomerName').textContent = data.name || 'N/A';
+                document.getElementById('displayCustomerEmail').textContent = data.email || 'N/A';
+                document.getElementById('displayCustomerPhone').textContent = data.phone || 'N/A';
+                document.getElementById('displayCustomerNic').textContent = data.nic || 'N/A';
+                document.getElementById('displayCustomerAddress').textContent = data.address || 'N/A';
+                document.getElementById('displayInquiryDetails').textContent = data.inquiry || 'N/A';
+                displayArea.classList.remove('hidden');
+                noCustomerFound.classList.add('hidden');
+            } else {
+                displayArea.classList.add('hidden');
+                noCustomerFound.classList.remove('hidden');
+            }
+        }
+
+        // Function to search customer by NIC
+        async function searchCustomerByNic() {
+            if (!isAuthReady || !currentUserId) {
+                showCustomModal("Error", "Authentication not ready. Please wait a moment and try again.");
+                return;
+            }
+
+            const nicToLookup = document.getElementById('nicLookup').value.trim();
+
+            if (!nicToLookup) {
+                showCustomModal("Error", "Please enter an NIC number to lookup.");
+                displayCustomerDetails(null); // Clear previous display
+                return;
+            }
+
+            // Use projectId from hardcoded config as appId for Firestore path
+            const projectId = firebaseConfig.projectId;
+            // Data is retrieved from: /artifacts/{projectId}/users/{userId}/customers/{nic}
+            const customerDocRef = doc(db, `artifacts/${projectId}/users/${currentUserId}/customers`, nicToLookup);
+
+            try {
+                const docSnap = await getDoc(customerDocRef);
+                if (docSnap.exists()) {
+                    console.log("Document data:", docSnap.data());
+                    displayCustomerDetails(docSnap.data());
+                } else {
+                    console.log("No such document!");
+                    displayCustomerDetails(null); // Indicate no customer found
+                }
+            } catch (e) {
+                console.error("Error getting document:", e);
+                showCustomModal("Error", "Failed to retrieve customer details. Please try again.");
+                displayCustomerDetails(null); // Clear display on error
+            }
+        }
+
+        // Event listeners
+        document.getElementById('customerForm').addEventListener('submit', saveCustomerDetails);
+        document.getElementById('lookupButton').addEventListener('click', searchCustomerByNic);
+    </script>
+</body>
+</html>

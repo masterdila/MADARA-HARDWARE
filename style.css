@@ -1,0 +1,67 @@
+/* styles.css */
+
+/*
+  This file is for any custom CSS you want to add or override.
+  Most of the styling is handled by Tailwind CSS classes directly in the HTML.
+*/
+
+/* Example: If you wanted to add a subtle animation to all buttons */
+button {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Example: Custom scrollbar (optional) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #e0e0e0;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/*
+  For your game integration, ensure the #background element has
+  position: relative; in its CSS if you're using absolute positioning
+  for game elements like the 'boy' or 'flames'.
+*/
+#background {
+    position: relative;
+    /* Add other background styles as needed for your game */
+    /* e.g., background-image: url('your-game-background.png'); */
+    /* e.g., overflow: hidden; if game elements move out of bounds */
+}
+
+/* Specific styles for the flame class if you're using it in your game */
+.flame {
+    /* Ensure these are set in your JavaScript for dynamic positioning */
+    /* For example:
+       position: absolute;
+       width: 50px;
+       height: 50px;
+       z-index: 10;
+    */
+}
+
+/* Media queries for more specific responsiveness if needed beyond Tailwind's defaults */
+@media (max-width: 640px) {
+    /* Styles for small screens */
+    .container {
+        padding: 1rem;
+    }
+    h1 {
+        font-size: 2rem;
+    }
+    h2 {
+        font-size: 2.5rem;
+    }
+}
