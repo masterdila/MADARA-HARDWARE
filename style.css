@@ -52,6 +52,19 @@ button {
     */
 }
 
+/*
+  New CSS to ensure the main content area is horizontally centered
+  and has a maximum width for better readability on large screens.
+  This works in conjunction with Tailwind's 'container mx-auto' on the main element.
+*/
+main.container {
+    max-width: 1280px; /* Adjust this value as needed for your preferred max width */
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%; /* Ensure it takes full available width up to max-width */
+}
+
+
 /* Media queries for more specific responsiveness if needed beyond Tailwind's defaults */
 @media (max-width: 640px) {
     /* Styles for small screens */
