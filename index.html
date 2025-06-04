@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,22 +59,6 @@
         }
         .modal-overlay.show .modal-content {
             transform: translateY(0);
-        }
-        /* Loading spinner for buttons */
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #fff;
-            border-radius: 50%;
-            width: 1.5rem;
-            height: 1.5rem;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 0.5rem;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -171,12 +156,12 @@
                            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300" required>
                 </div>
                 <div>
-                    <label for="customerPhone" class="block text-lg font-medium text-gray-700 mb-2">Phone Number</label>
+                    <label for="customerPhone" class="block text-lg font-medium text-gray-700 mb-2">Phone Number (Optional)</label>
                     <input type="tel" id="customerPhone" name="customerPhone" placeholder="+94 77 123 4567"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300" required>
+                           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300">
                 </div>
                 <div>
-                    <label for="customerNic" class="block text-lg font-medium text-gray-700 mb-2">NIC Number (Used as unique ID)</label>
+                    <label for="customerNic" class="block text-lg font-medium text-gray-700 mb-2">NIC Number</label>
                     <input type="text" id="customerNic" name="customerNic" placeholder="901234567V or 200012345678"
                            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300" required>
                 </div>
@@ -197,21 +182,16 @@
         </section>
 
         <section id="customer-lookup" class="bg-white p-8 rounded-lg shadow-lg">
-            <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-8">Lookup Customer Details</h2>
-            <div class="max-w-xl mx-auto space-y-6">
-                <!-- Lookup by NIC -->
-                <div class="p-4 border border-gray-200 rounded-md bg-gray-50">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Lookup by NIC Number</h3>
-                    <div>
-                        <label for="nicLookup" class="block text-lg font-medium text-gray-700 mb-2">Enter NIC Number</label>
-                        <input type="text" id="nicLookup" name="nicLookup" placeholder="901234567V or 200012345678"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300">
-                    </div>
-                    <button id="lookupByNicButton" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-md transition duration-300 transform hover:scale-105">
-                        <span id="lookupButtonText">Lookup by NIC</span>
-                        <span id="lookupButtonSpinner" class="spinner hidden"></span>
-                    </button>
+            <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-8">Lookup Customer Details by NIC</h2>
+            <div class="max-w-xl mx-auto space-y-4">
+                <div>
+                    <label for="nicLookup" class="block text-lg font-medium text-gray-700 mb-2">Enter NIC Number</label>
+                    <input type="text" id="nicLookup" name="nicLookup" placeholder="901234567V or 200012345678"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300">
                 </div>
+                <button id="lookupButton" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-md transition duration-300 transform hover:scale-105">
+                    Lookup Customer
+                </button>
 
                 <div id="customerDetailsDisplay" class="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200 hidden">
                     <h3 class="text-2xl font-semibold text-gray-800 mb-4">Customer Details:</h3>
@@ -250,8 +230,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
         // Import Auth and Firestore for your existing functionality
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js"; // Updated to 11.8.1
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js"; // Updated to 11.8.1
 
         // Your web app's Firebase configuration (hardcoded as per your request)
         const firebaseConfig = {
@@ -270,7 +250,7 @@
 
         let db;
         let auth;
-        let currentUserId = null; // Still needed for authentication state, but not for data path
+        let currentUserId = null;
         let isAuthReady = false;
 
         // Function to show custom modal
@@ -293,11 +273,11 @@
 
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
-                        currentUserId = user.uid; // User is signed in (anonymously)
+                        currentUserId = user.uid;
                         console.log("Authenticated with user ID:", currentUserId);
                         isAuthReady = true;
                     } else {
-                        // User is signed out or not yet authenticated. Sign in anonymously.
+                        // Sign in anonymously if no user is currently authenticated
                         try {
                             await signInAnonymously(auth);
                         } catch (error) {
@@ -323,14 +303,14 @@
         async function saveCustomerDetails(event) {
             event.preventDefault(); // Prevent default form submission
 
-            if (!isAuthReady) { // Check only for auth readiness
+            if (!isAuthReady || !currentUserId) {
                 showCustomModal("Error", "Authentication not ready. Please wait a moment and try again.");
                 return;
             }
 
             const customerName = document.getElementById('customerName').value;
             const customerEmail = document.getElementById('customerEmail').value;
-            const customerPhone = document.getElementById('customerPhone').value.trim(); // Trim whitespace
+            const customerPhone = document.getElementById('customerPhone').value;
             const customerNic = document.getElementById('customerNic').value.trim(); // Trim whitespace
             const customerAddress = document.getElementById('customerAddress').value;
             const inquiryDetails = document.getElementById('inquiryDetails').value;
@@ -339,21 +319,17 @@
                 showCustomModal("Error", "NIC Number is required to save customer details.");
                 return;
             }
-            if (!customerPhone) {
-                showCustomModal("Error", "Phone Number is required to save customer details.");
-                return;
-            }
 
-            // Data is now stored in a public collection, accessible by any authenticated user
-            // Path: /artifacts/{projectId}/public/customers/{nic}
+            // Use projectId from hardcoded config as appId for Firestore path
             const projectId = firebaseConfig.projectId;
-            const customerDocRef = doc(db, `artifacts/${projectId}/public/customers`, customerNic);
+            // Data is stored in: /artifacts/{projectId}/users/{userId}/customers/{nic}
+            const customerDocRef = doc(db, `artifacts/${projectId}/users/${currentUserId}/customers`, customerNic);
 
             try {
                 await setDoc(customerDocRef, {
                     name: customerName,
                     email: customerEmail,
-                    phone: customerPhone, // Save phone number as a field
+                    phone: customerPhone,
                     nic: customerNic,
                     address: customerAddress,
                     inquiry: inquiryDetails,
@@ -387,26 +363,10 @@
             }
         }
 
-        // Function to search customer by NIC (now also using public path)
+        // Function to search customer by NIC
         async function searchCustomerByNic() {
-            // Get button elements for loading state
-            const lookupButton = document.getElementById('lookupByNicButton');
-            const lookupButtonText = document.getElementById('lookupButtonText');
-            const lookupButtonSpinner = document.getElementById('lookupButtonSpinner');
-
-            // Show loading state
-            lookupButton.disabled = true;
-            lookupButtonText.classList.add('hidden');
-            lookupButtonSpinner.classList.remove('hidden');
-
-            console.log("Attempting NIC lookup. isAuthReady:", isAuthReady); // Added console log for debugging
-
-            if (!isAuthReady) {
+            if (!isAuthReady || !currentUserId) {
                 showCustomModal("Error", "Authentication not ready. Please wait a moment and try again.");
-                // Hide loading state
-                lookupButton.disabled = false;
-                lookupButtonText.classList.remove('hidden');
-                lookupButtonSpinner.classList.add('hidden');
                 return;
             }
 
@@ -414,42 +374,34 @@
 
             if (!nicToLookup) {
                 showCustomModal("Error", "Please enter an NIC number to lookup.");
-                displayCustomerDetails(null);
-                // Hide loading state
-                lookupButton.disabled = false;
-                lookupButtonText.classList.remove('hidden');
-                lookupButtonSpinner.classList.add('hidden');
+                displayCustomerDetails(null); // Clear previous display
                 return;
             }
 
-            // Retrieving from public collection for cross-device access
+            // Use projectId from hardcoded config as appId for Firestore path
             const projectId = firebaseConfig.projectId;
-            const customerDocRef = doc(db, `artifacts/${projectId}/public/customers`, nicToLookup);
+            // Data is retrieved from: /artifacts/{projectId}/users/{userId}/customers/{nic}
+            const customerDocRef = doc(db, `artifacts/${projectId}/users/${currentUserId}/customers`, nicToLookup);
 
             try {
                 const docSnap = await getDoc(customerDocRef);
                 if (docSnap.exists()) {
-                    console.log("Document data (by NIC):", docSnap.data());
+                    console.log("Document data:", docSnap.data());
                     displayCustomerDetails(docSnap.data());
                 } else {
-                    console.log("No such document found by NIC!");
-                    displayCustomerDetails(null);
+                    console.log("No such document!");
+                    displayCustomerDetails(null); // Indicate no customer found
                 }
             } catch (e) {
-                console.error("Error getting document by NIC:", e);
-                showCustomModal("Error", "Failed to retrieve customer details by NIC. Please try again.");
-                displayCustomerDetails(null);
-            } finally {
-                // Always hide loading state, regardless of success or failure
-                lookupButton.disabled = false;
-                lookupButtonText.classList.remove('hidden');
-                lookupButtonSpinner.classList.add('hidden');
+                console.error("Error getting document:", e);
+                showCustomModal("Error", "Failed to retrieve customer details. Please try again.");
+                displayCustomerDetails(null); // Clear display on error
             }
         }
 
         // Event listeners
         document.getElementById('customerForm').addEventListener('submit', saveCustomerDetails);
-        document.getElementById('lookupByNicButton').addEventListener('click', searchCustomerByNic);
+        document.getElementById('lookupButton').addEventListener('click', searchCustomerByNic);
     </script>
 </body>
 </html>
