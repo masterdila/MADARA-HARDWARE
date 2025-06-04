@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -156,12 +155,12 @@
                            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300" required>
                 </div>
                 <div>
-                    <label for="customerPhone" class="block text-lg font-medium text-gray-700 mb-2">Phone Number (Optional)</label>
+                    <label for="customerPhone" class="block text-lg font-medium text-gray-700 mb-2">Phone Number</label>
                     <input type="tel" id="customerPhone" name="customerPhone" placeholder="+94 77 123 4567"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300" required>
                 </div>
                 <div>
-                    <label for="customerNic" class="block text-lg font-medium text-gray-700 mb-2">NIC Number</label>
+                    <label for="customerNic" class="block text-lg font-medium text-gray-700 mb-2">NIC Number (Used as unique ID)</label>
                     <input type="text" id="customerNic" name="customerNic" placeholder="901234567V or 200012345678"
                            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300" required>
                 </div>
@@ -182,16 +181,35 @@
         </section>
 
         <section id="customer-lookup" class="bg-white p-8 rounded-lg shadow-lg">
-            <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-8">Lookup Customer Details by NIC</h2>
-            <div class="max-w-xl mx-auto space-y-4">
-                <div>
-                    <label for="nicLookup" class="block text-lg font-medium text-gray-700 mb-2">Enter NIC Number</label>
-                    <input type="text" id="nicLookup" name="nicLookup" placeholder="901234567V or 200012345678"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+            <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-8">Lookup Customer Details</h2>
+            <div class="max-w-xl mx-auto space-y-6">
+                <!-- Lookup by NIC -->
+                <div class="p-4 border border-gray-200 rounded-md bg-gray-50">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Lookup by NIC Number</h3>
+                    <div>
+                        <label for="nicLookup" class="block text-lg font-medium text-gray-700 mb-2">Enter NIC Number</label>
+                        <input type="text" id="nicLookup" name="nicLookup" placeholder="901234567V or 200012345678"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                    </div>
+                    <button id="lookupByNicButton" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-md transition duration-300 transform hover:scale-105 mt-4">
+                        Lookup by NIC
+                    </button>
                 </div>
-                <button id="lookupButton" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-md transition duration-300 transform hover:scale-105">
-                    Lookup Customer
-                </button>
+
+                <!-- Removed: Lookup by Phone Number section -->
+                <!--
+                <div class="p-4 border border-gray-200 rounded-md bg-gray-50">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Lookup by Phone Number</h3>
+                    <div>
+                        <label for="phoneLookup" class="block text-lg font-medium text-gray-700 mb-2">Enter Phone Number</label>
+                        <input type="tel" id="phoneLookup" name="phoneLookup" placeholder="+94 77 123 4567"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                    </div>
+                    <button id="lookupByPhoneButton" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-md transition duration-300 transform hover:scale-105 mt-4">
+                        Lookup by Phone
+                    </button>
+                </div>
+                -->
 
                 <div id="customerDetailsDisplay" class="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200 hidden">
                     <h3 class="text-2xl font-semibold text-gray-800 mb-4">Customer Details:</h3>
@@ -230,8 +248,9 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
         // Import Auth and Firestore for your existing functionality
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js"; // Updated to 11.8.1
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js"; // Updated to 11.8.1
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+        // Removed collection, query, where, getDocs as they are only used by phone lookup
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
         // Your web app's Firebase configuration (hardcoded as per your request)
         const firebaseConfig = {
@@ -250,7 +269,7 @@
 
         let db;
         let auth;
-        let currentUserId = null;
+        let currentUserId = null; // Still needed for authentication state, but not for data path
         let isAuthReady = false;
 
         // Function to show custom modal
@@ -273,11 +292,11 @@
 
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
-                        currentUserId = user.uid;
+                        currentUserId = user.uid; // User is signed in (anonymously)
                         console.log("Authenticated with user ID:", currentUserId);
                         isAuthReady = true;
                     } else {
-                        // Sign in anonymously if no user is currently authenticated
+                        // User is signed out or not yet authenticated. Sign in anonymously.
                         try {
                             await signInAnonymously(auth);
                         } catch (error) {
@@ -303,14 +322,14 @@
         async function saveCustomerDetails(event) {
             event.preventDefault(); // Prevent default form submission
 
-            if (!isAuthReady || !currentUserId) {
+            if (!isAuthReady) { // Check only for auth readiness
                 showCustomModal("Error", "Authentication not ready. Please wait a moment and try again.");
                 return;
             }
 
             const customerName = document.getElementById('customerName').value;
             const customerEmail = document.getElementById('customerEmail').value;
-            const customerPhone = document.getElementById('customerPhone').value;
+            const customerPhone = document.getElementById('customerPhone').value.trim(); // Trim whitespace
             const customerNic = document.getElementById('customerNic').value.trim(); // Trim whitespace
             const customerAddress = document.getElementById('customerAddress').value;
             const inquiryDetails = document.getElementById('inquiryDetails').value;
@@ -319,17 +338,22 @@
                 showCustomModal("Error", "NIC Number is required to save customer details.");
                 return;
             }
+            // Phone number is now optional as per your earlier code, but still saved as a field
+            // if (!customerPhone) {
+            //     showCustomModal("Error", "Phone Number is required to save customer details.");
+            //     return;
+            // }
 
-            // Use projectId from hardcoded config as appId for Firestore path
+            // --- FIX: Data is now stored in a public collection for cross-device access ---
+            // Path: /artifacts/{projectId}/public/customers/{nic}
             const projectId = firebaseConfig.projectId;
-            // Data is stored in: /artifacts/{projectId}/users/{userId}/customers/{nic}
-            const customerDocRef = doc(db, `artifacts/${projectId}/users/${currentUserId}/customers`, customerNic);
+            const customerDocRef = doc(db, `artifacts/${projectId}/public/customers`, customerNic);
 
             try {
                 await setDoc(customerDocRef, {
                     name: customerName,
                     email: customerEmail,
-                    phone: customerPhone,
+                    phone: customerPhone, // Save phone number as a field
                     nic: customerNic,
                     address: customerAddress,
                     inquiry: inquiryDetails,
@@ -363,9 +387,9 @@
             }
         }
 
-        // Function to search customer by NIC
+        // Function to search customer by NIC (now also using public path)
         async function searchCustomerByNic() {
-            if (!isAuthReady || !currentUserId) {
+            if (!isAuthReady) {
                 showCustomModal("Error", "Authentication not ready. Please wait a moment and try again.");
                 return;
             }
@@ -374,34 +398,41 @@
 
             if (!nicToLookup) {
                 showCustomModal("Error", "Please enter an NIC number to lookup.");
-                displayCustomerDetails(null); // Clear previous display
+                displayCustomerDetails(null);
                 return;
             }
 
-            // Use projectId from hardcoded config as appId for Firestore path
+            // --- FIX: Retrieving from public collection for cross-device access ---
             const projectId = firebaseConfig.projectId;
-            // Data is retrieved from: /artifacts/{projectId}/users/{userId}/customers/{nic}
-            const customerDocRef = doc(db, `artifacts/${projectId}/users/${currentUserId}/customers`, nicToLookup);
+            const customerDocRef = doc(db, `artifacts/${projectId}/public/customers`, nicToLookup);
 
             try {
                 const docSnap = await getDoc(customerDocRef);
                 if (docSnap.exists()) {
-                    console.log("Document data:", docSnap.data());
+                    console.log("Document data (by NIC):", docSnap.data());
                     displayCustomerDetails(docSnap.data());
                 } else {
-                    console.log("No such document!");
-                    displayCustomerDetails(null); // Indicate no customer found
+                    console.log("No such document found by NIC!");
+                    displayCustomerDetails(null);
                 }
             } catch (e) {
-                console.error("Error getting document:", e);
-                showCustomModal("Error", "Failed to retrieve customer details. Please try again.");
-                displayCustomerDetails(null); // Clear display on error
+                console.error("Error getting document by NIC:", e);
+                showCustomModal("Error", "Failed to retrieve customer details by NIC. Please try again.");
+                displayCustomerDetails(null);
             }
         }
 
+        // --- Removed: searchCustomerByPhone function and its imports ---
+        /*
+        async function searchCustomerByPhone() {
+            // ... (function content removed)
+        }
+        */
+
         // Event listeners
         document.getElementById('customerForm').addEventListener('submit', saveCustomerDetails);
-        document.getElementById('lookupButton').addEventListener('click', searchCustomerByNic);
+        document.getElementById('lookupByNicButton').addEventListener('click', searchCustomerByNic);
+        // Removed: document.getElementById('lookupByPhoneButton').addEventListener('click', searchCustomerByPhone);
     </script>
 </body>
 </html>
