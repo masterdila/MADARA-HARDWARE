@@ -1,82 +1,87 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+// Import Firebase SDKs (make sure to add these in your HTML before this script)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
-// Firebase configuration
+// Firebase config (replace with your own)
 const firebaseConfig = {
-  apiKey: "AIzaSyDHipBHzLZ-ULLOPU0SzckM4QnCWjNsUyA",
-  authDomain: "powercallcrm.firebaseapp.com",
-  projectId: "powercallcrm",
-  storageBucket: "powercallcrm.appspot.com",
-  messagingSenderId: "521012350596",
-  appId: "1:521012350596:web:726d09157f3c70cd9370a0",
-  measurementId: "G-ZFBETET9XR"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "your-app.firebaseapp.com",
+    projectId: "your-project-id",
+    // Add other values if needed
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Function: Save customer details
+// Save customer details
 async function saveCustomerDetails() {
-  const customerName = document.getElementById("customerName").value.trim();
-  const customerEmail = document.getElementById("customerEmail").value.trim();
-  const customerPhone = document.getElementById("customerPhone").value.trim();
-  const customerNic = document.getElementById("customerNic").value.trim();
-  const customerAddress = document.getElementById("customerAddress").value.trim();
-  const inquiryDetails = document.getElementById("inquiryDetails").value.trim();
+    const customerName = document.getElementById("name").value.trim();
+    const customerEmail = document.getElementById("email").value.trim();
+    const customerPhone = document.getElementById("phone").value.trim();
+    const customerNic = document.getElementById("nic").value.trim();
+    const customerAddress = document.getElementById("address").value.trim();
+    const inquiryDetails = document.getElementById("inquiry").value.trim();
 
-  if (!customerName || !customerEmail || !customerPhone || !customerNic || !customerAddress || !inquiryDetails) {
-    showCustomModal("Error", "Please fill in all required fields.");
-    return;
-  }
+    if (!customerNic) {
+        alert("NIC is required");
+        return;
+    }
 
-  try {
-    await setDoc(doc(db, "customers", customerNic), {
-      name: customerName,
-      email: customerEmail,
-      phone: customerPhone,
-      nic: customerNic,
-      address: customerAddress,
-      inquiry: inquiryDetails,
-      timestamp: Date.now()
-    });
-    showCustomModal("Success", "Customer details saved successfully!");
-    document.getElementById("customerForm").reset();
-  } catch (error) {
-    console.error("Error saving document: ", error);
-    showCustomModal("Error", "Failed to save customer details.");
-  }
+    try {
+        await setDoc(doc(db, "customers", customerNic), {
+            name: customerName,
+            email: customerEmail,
+            phone: customerPhone,
+            nic: customerNic,
+            address: customerAddress,
+            inquiry: inquiryDetails,
+            timestamp: Date.now()
+        });
+        showCustomModal("Success", "Customer details saved successfully!");
+        document.getElementById("customerForm").reset();
+    } catch (err) {
+        console.error("Error saving customer:", err);
+        showCustomModal("Error", "Failed to save customer.");
+    }
 }
 
-// Event listener: Lookup customer by NIC
+// Lookup by NIC
 document.getElementById("lookupButton").addEventListener("click", async () => {
-  const nic = document.getElementById("nicLookup").value.trim();
-  if (!nic) return;
+    const nic = document.getElementById("nicLookup").value.trim();
+    const detailsDiv = document.getElementById("customerDetailsDisplay");
+    const notFoundDiv = document.getElementById("noCustomerFound");
+    const lookupBtn = document.getElementById("lookupButton");
 
-  const docRef = doc(db, "customers", nic);
-  const docSnap = await getDoc(docRef);
+    if (!nic) return;
 
-  const detailsDiv = document.getElementById("customerDetailsDisplay");
-  const notFoundDiv = document.getElementById("noCustomerFound");
+    lookupBtn.disabled = true;
+    lookupBtn.innerHTML = <span class="loader"></span>;
 
-  if (docSnap.exists()) {
-    const data = docSnap.data();
-    document.getElementById("displayCustomerName").textContent = data.name || "";
-    document.getElementById("displayCustomerEmail").textContent = data.email || "";
-    document.getElementById("displayCustomerPhone").textContent = data.phone || "";
-    document.getElementById("displayCustomerNic").textContent = data.nic || "";
-    document.getElementById("displayCustomerAddress").textContent = data.address || "";
-    document.getElementById("displayInquiryDetails").textContent = data.inquiry || "";
+    try {
+        const docRef = doc(db, "customers", nic);
+        const docSnap = await getDoc(docRef);
 
-    detailsDiv.classList.remove("hidden");
-    notFoundDiv.classList.add("hidden");
-  } else {
-    detailsDiv.classList.add("hidden");
-    notFoundDiv.classList.remove("hidden");
-  }
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            document.getElementById("displayCustomerName").textContent = data.name || "";
+            document.getElementById("displayCustomerEmail").textContent = data.email || "";
+            document.getElementById("displayCustomerPhone").textContent = data.phone || "";
+            document.getElementById("displayCustomerNic").textContent = data.nic || "";
+            document.getElementById("displayCustomerAddress").textContent = data.address || "";
+            document.getElementById("displayInquiryDetails").textContent = data.inquiry || "";
+
+            detailsDiv.classList.remove("hidden");
+            notFoundDiv.classList.add("hidden");
+        } else {
+            detailsDiv.classList.add("hidden");
+            notFoundDiv.classList.remove("hidden");
+        }
+    } catch (error) {
+        console.error("Error looking up customer:", error);
+        alert("Failed to lookup customer. Check console.");
+    } finally {
+        lookupBtn.disabled = false;
+        lookupBtn.innerHTML = Lookup;
+    }
 });
-
-// Example modal function (you should define this or use your own modal logic)
-function showCustomModal(title, message) {
-  alert(${title}: ${message});
-}
