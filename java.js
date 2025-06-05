@@ -4,9 +4,9 @@ import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/fireb
 
 // Firebase config (replace with your own)
 const firebaseConfig = {
-    apiKey: "AIzaSyDzdAuyWRFGlH1pit8I402wT4pLs9kBMl8",
+    apiKey: "YOUR_API_KEY",
     authDomain: "your-app.firebaseapp.com",
-    projectId: "madara-motors",
+    projectId: "your-project-id",
     // Add other values if needed
 };
 

@@ -1,0 +1,194 @@
+<link rel="stylesheet" href="styles.css">/* styles.css */
+
+/*
+  This file is for any custom CSS you want to add or override.
+  Most of the styling is handled by Tailwind CSS classes directly in the HTML.
+*/
+
+/* Example: If you wanted to add a subtle animation to all buttons */
+button {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Example: Custom scrollbar (optional) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #e0e0e0;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/*
+  For your game integration, ensure the #background element has
+  position: relative; in its CSS if you're using absolute positioning
+  for game elements like the 'boy' or 'flames'.
+*/
+#background {
+    position: relative;
+    /* Add other background styles as needed for your game */
+    /* e.g., background-image: url('your-game-background.png'); */
+    /* e.g., overflow: hidden; if game elements move out of bounds */
+}
+
+/* Specific styles for the flame class if you're using it in your game */
+.flame {
+    /* Ensure these are set in your JavaScript for dynamic positioning */
+    /* For example:
+       position: absolute;
+       width: 50px;
+       height: 50px;
+       z-index: 10;
+    */
+}
+
+/*
+  New CSS to ensure the main content area is horizontally centered
+  and has a maximum width for better readability on large screens.
+  This works in conjunction with Tailwind's 'container mx-auto' on the main element.
+*/
+main.container {
+    max-width: 1280px; /* Adjust this value as needed for your preferred max width */
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%; /* Ensure it takes full available width up to max-width */
+}
+
+
+/* Media queries for more specific responsiveness if needed beyond Tailwind's defaults */
+@media (max-width: 640px) {
+    /* Styles for small screens */
+    .container {
+        padding: 1rem;
+    }
+    h1 {
+        font-size: 2rem;
+    }
+    h2 {
+        font-size: 2.5rem;
+    }
+}
+/* Styles for the animated tools in the header */
+.tool-animation-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Hide tools before they fly in */
+    pointer-events: none; /* Allow clicks through the container */
+}
+
+.animated-tool {
+    position: absolute;
+    width: 60px; /* Adjust size as needed */
+    height: 60px; /* Adjust size as needed */
+    object-fit: contain;
+    opacity: 0;
+    animation-fill-mode: forwards; /* Keep final state */
+    animation-timing-function: ease-out;
+    z-index: 50; /* Ensure tools are above header background but below text */
+}
+
+/* Keyframe animations for tools */
+@keyframes toolFlyIn1 {
+    0% {
+        transform: translateX(-100vw) translateY(-50%) rotate(0deg) scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(10%) translateY(10%) rotate(30deg) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes toolFlyIn2 {
+    0% {
+        transform: translateX(100vw) translateY(-50%) rotate(0deg) scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(85%) translateY(15%) rotate(-20deg) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes toolFlyIn3 {
+    0% {
+        transform: translateY(100vh) translateX(-50%) rotate(0deg) scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(70%) translateX(5%) rotate(45deg) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Apply animations to specific tools */
+.tool-1 {
+    top: 5%;
+    left: 0;
+    animation: toolFlyIn1 1.5s ease-out 0.5s forwards;
+}
+
+.tool-2 {
+    top: 10%;
+    right: 0;
+    animation: toolFlyIn2 1.5s ease-out 0.8s forwards;
+}
+
+.tool-3 {
+    bottom: 0;
+    left: 20%;
+    animation: toolFlyIn3 1.5s ease-out 1.1s forwards;
+}
+
+/* Responsive adjustments for tools */
+@media (max-width: 768px) {
+    .animated-tool {
+        width: 40px;
+        height: 40px;
+    }
+    .tool-1 {
+        top: 5%;
+        left: 0;
+        animation: toolFlyIn1 1.5s ease-out 0.5s forwards;
+        /* The media query overrides below are for potential JavaScript-triggered animations,
+           but for pure CSS, the initial animation property will apply directly.
+           If you were using JS to add an 'active' class, you'd define the final state here. */
+        /* transform: translateX(-100vw) translateY(-50%) rotate(0deg) scale(0.5); */
+    }
+    /* .tool-1.active {
+        transform: translateX(5%) translateY(5%) rotate(30deg) scale(1);
+    } */
+
+    .tool-2 {
+        top: 10%;
+        right: 0;
+        animation: toolFlyIn2 1.5s ease-out 0.8s forwards;
+        /* transform: translateX(100vw) translateY(-50%) rotate(0deg) scale(0.5); */
+    }
+    /* .tool-2.active {
+        transform: translateX(80%) translateY(10%) rotate(-20deg) scale(1);
+    } */
+
+    .tool-3 {
+        bottom: 0;
+        left: 10%; /* Adjust position for smaller screens */
+        animation: toolFlyIn3 1.5s ease-out 1.1s forwards;
+        /* transform: translateY(100vh) translateX(-50%) rotate(0deg) scale(0.5); */
+    }
+    /* .tool-3.active {
+        transform: translateY(60%) translateX(0%) rotate(45deg) scale(1);
+    } */
+}
